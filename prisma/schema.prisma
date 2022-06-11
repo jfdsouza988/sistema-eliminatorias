@@ -25,5 +25,30 @@ model Championship {
   createdAt DateTime @default(now())
 
 
+  ChampionshipTeam ChampionshipTeam[]
   @@map("championship")
+}
+
+model Team {
+  id           String @id @unique @default(uuid())
+  name         String @unique
+  abbreviation String
+
+  updatedAt DateTime @default(now()) @updatedAt
+  createdAt DateTime @default(now())
+
+
+  ChampionshipTeam ChampionshipTeam[]
+  @@map("team")
+}
+
+model ChampionshipTeam {
+  id              String       @id @unique @default(uuid())
+  id_championship String
+  championship    Championship @relation(fields: [id_championship], references: [id])
+  id_team         String
+  team            Team         @relation(fields: [id_team], references: [id])
+
+
+  @@map("championships_teams")
 }

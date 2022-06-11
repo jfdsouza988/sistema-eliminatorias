@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "sourceMap": true,
     "target": "es2016",
     "module": "commonjs",
     "rootDir": "./",
@@ -11,6 +12,7 @@
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
     "strict": true,
+    "lib": ["esnext"],
     "skipLibCheck": true
   }
 }

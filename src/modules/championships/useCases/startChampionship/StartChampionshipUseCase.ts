@@ -27,18 +27,13 @@ export class StartChampionshipUseCase {
       throw new AppError('Inappropriate number of teams');
     }
 
-    await this.championshipRepository.updateStatus(championship.name, 'start');
+    const championshipStarted = await this.championshipRepository.updateStatus(championship.name, 'start');
 
-    // gerar primeira rodada de jogos
-    let teams: string[] = [];
+    const numberOfTheMatchs = championship.teams.length / 2;
     let matchNumber = 1;
 
-    championship.teams.forEach((team) => {
-      teams.push(team.name);
-    });
-
     (async () => {
-      while (teams.length > 0) {
+      do {
         const indexTeamA = Math.floor(Math.random() * championship.teams.length);
         const indexTeamB = Math.floor(Math.random() * championship.teams.length);
 
@@ -50,15 +45,10 @@ export class StartChampionshipUseCase {
             teamB: championship.teams[indexTeamB].name,
           });
 
-          teams = teams.filter((team) => team !== championship.teams[indexTeamA].name);
-          teams = teams.filter((team) => team !== championship.teams[indexTeamB].name);
-
           matchNumber += 1;
         }
-      }
+      } while (matchNumber <= numberOfTheMatchs);
     })();
-
-    const championshipStarted = await this.championshipRepository.findByName(name);
 
     return championshipStarted;
   }

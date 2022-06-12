@@ -1,8 +1,8 @@
-import { Championship } from '@prisma/client';
+import { Championship, ChampionshipStatus } from '@prisma/client';
 import { prisma } from '../../../../database/prismaClient';
 
 import { ICreateChampionshipDTO } from '../../dtos/ICreateChampionshipDTO';
-import { IChampionshipRepository, IRegisterTeams } from '../IChampionshipRepository';
+import { IChampionshipRepository, IChampionshipWithTeams, IRegisterTeams } from '../IChampionshipRepository';
 
 class ChampionshipRepository implements IChampionshipRepository {
   async create(data: ICreateChampionshipDTO): Promise<Championship> {
@@ -17,6 +17,10 @@ class ChampionshipRepository implements IChampionshipRepository {
     const championship = await prisma.championship.findUnique({
       where: {
         name,
+      },
+      include: {
+        teams: true,
+        matchs: true,
       },
     });
 
@@ -85,7 +89,7 @@ class ChampionshipRepository implements IChampionshipRepository {
     return updatedChampionship;
   }
 
-  async findTeams(name: string): Promise<Championship | null> {
+  async findTeams(name: string): Promise<IChampionshipWithTeams | null> {
     const championshipTeams = await prisma.championship.findUnique({
       where: {
         name,
@@ -113,6 +117,24 @@ class ChampionshipRepository implements IChampionshipRepository {
     });
 
     return deleteChampionshipTeam;
+  }
+
+  async updateStatus(name: string, status: string): Promise<Championship> {
+    const updatedChampionship = await prisma.championship.update({
+      where: {
+        name,
+      },
+      data: {
+        status:
+          status === 'start'
+            ? ChampionshipStatus.INITIATED
+            : status === 'finish'
+            ? ChampionshipStatus.FINISHED
+            : ChampionshipStatus.PENDING,
+      },
+    });
+
+    return updatedChampionship;
   }
 }
 

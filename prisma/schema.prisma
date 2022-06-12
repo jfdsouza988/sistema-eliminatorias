@@ -21,6 +21,7 @@ model Championship {
   champion    String?
   status      ChampionshipStatus @default(PENDING)
   teams       Team[]             @relation("championship_teams")
+  matchs      Match[]
 
   updatedAt DateTime @default(now()) @updatedAt
   createdAt DateTime @default(now())
@@ -40,4 +41,28 @@ model Team {
 
 
   @@map("team")
+}
+
+enum MatchStatus {
+  PROGRESS
+  FINISHED
+}
+
+model Match {
+  id             String       @id @unique @default(uuid())
+  matchNumber    Int?
+  teamA          String
+  resultTeamA    Int?
+  teamB          String
+  resultTeamB    Int?
+  winner         String?
+  championshipId String
+  championship   Championship @relation(fields: [championshipId], references: [id])
+  status         MatchStatus  @default(PROGRESS)
+
+
+  updatedAt DateTime @default(now()) @updatedAt
+  createdAt DateTime @default(now())
+
+  @@map("match")
 }

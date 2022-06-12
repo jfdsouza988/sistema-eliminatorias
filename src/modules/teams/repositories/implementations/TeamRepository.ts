@@ -8,6 +8,19 @@ class TeamRepository implements ITeamRepository {
 
     return allTeams;
   }
+
+  async findByName(name: string): Promise<Team | null> {
+    const team = await prisma.team.findUnique({
+      where: {
+        name,
+      },
+      include: {
+        championships: true,
+      },
+    });
+
+    return team;
+  }
 }
 
 export { TeamRepository };

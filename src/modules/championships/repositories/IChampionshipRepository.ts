@@ -17,6 +17,7 @@ interface IChampionshipRepository {
   findAll(): Promise<Championship[]>;
   update(id: string, name: string, description: string, award: number): Promise<Championship>;
   registerTeams({ name, teams }: IRegisterTeams): Promise<Championship | null>;
+  findTeams(name: string): Promise<Championship | null>;
 }
 
 export { IChampionshipRepository };

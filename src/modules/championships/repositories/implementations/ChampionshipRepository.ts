@@ -84,6 +84,19 @@ class ChampionshipRepository implements IChampionshipRepository {
 
     return updatedChampionship;
   }
+
+  async findTeams(name: string): Promise<Championship | null> {
+    const championshipTeams = await prisma.championship.findUnique({
+      where: {
+        name,
+      },
+      include: {
+        teams: true,
+      },
+    });
+
+    return championshipTeams;
+  }
 }
 
 export { ChampionshipRepository };

@@ -97,6 +97,23 @@ class ChampionshipRepository implements IChampionshipRepository {
 
     return championshipTeams;
   }
+
+  async deleteTeam(championshipId: string, teamName: string): Promise<Championship> {
+    const deleteChampionshipTeam = await prisma.championship.update({
+      where: {
+        id: championshipId,
+      },
+      data: {
+        teams: {
+          disconnect: {
+            name: teamName,
+          },
+        },
+      },
+    });
+
+    return deleteChampionshipTeam;
+  }
 }
 
 export { ChampionshipRepository };

@@ -2,7 +2,7 @@ import { Championship } from '@prisma/client';
 import { prisma } from '../../../../database/prismaClient';
 
 import { ICreateChampionshipDTO } from '../../dtos/ICreateChampionshipDTO';
-import { IChampionshipRepository } from '../IChampionshipRepository';
+import { IChampionshipRepository, IRegisterTeams } from '../IChampionshipRepository';
 
 class ChampionshipRepository implements IChampionshipRepository {
   async create(data: ICreateChampionshipDTO): Promise<Championship> {
@@ -42,6 +42,47 @@ class ChampionshipRepository implements IChampionshipRepository {
     });
 
     return championship;
+  }
+
+  async registerTeams({ name, teams }: IRegisterTeams): Promise<Championship | null> {
+    await Promise.all(
+      teams.map(async (team) => {
+        await prisma.championship.update({
+          where: {
+            name,
+          },
+          data: {
+            teams: {
+              connectOrCreate: {
+                where: {
+                  name: team.name,
+                },
+                create: {
+                  name: team.name,
+                  abbreviation: team.abbreviation,
+                },
+              },
+            },
+          },
+        });
+      }),
+    );
+
+    const updatedChampionship = await prisma.championship.findUnique({
+      where: {
+        name,
+      },
+      include: {
+        teams: {
+          select: {
+            name: true,
+            abbreviation: true,
+          },
+        },
+      },
+    });
+
+    return updatedChampionship;
   }
 }
 

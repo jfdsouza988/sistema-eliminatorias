@@ -1,6 +1,10 @@
 import { container } from 'tsyringe';
 
+import { TeamRepository } from '../../modules/teams/repositories/implementations/TeamRepository';
+import { ITeamRepository } from '../../modules/teams/repositories/ITeamRepository';
 import { ChampionshipRepository } from '../../modules/championships/repositories/implementations/ChampionshipRepository';
 import { IChampionshipRepository } from '../../modules/championships/repositories/IChampionshipRepository';
 
 container.registerSingleton<IChampionshipRepository>('ChampionshipRepository', ChampionshipRepository);
+
+container.registerSingleton<ITeamRepository>('TeamRepository', TeamRepository);

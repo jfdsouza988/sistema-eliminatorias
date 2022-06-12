@@ -21,6 +21,20 @@ class TeamRepository implements ITeamRepository {
 
     return team;
   }
+
+  async update(id: string, name: string, abbreviation: string): Promise<Team> {
+    const team = await prisma.team.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        abbreviation,
+      },
+    });
+
+    return team;
+  }
 }
 
 export { TeamRepository };

@@ -37,6 +37,17 @@ class MatchRepository implements IMatchRepository {
 
     return match;
   }
+
+  async findMatchsInProgressByChampionship(championshipId: string): Promise<Match[]> {
+    const matchInProgress = await prisma.match.findMany({
+      where: {
+        championshipId,
+        status: MatchStatus.PROGRESS,
+      },
+    });
+
+    return matchInProgress;
+  }
 }
 
 export { MatchRepository };

@@ -2,7 +2,12 @@ import { Championship, ChampionshipStatus } from '@prisma/client';
 import { prisma } from '../../../../database/prismaClient';
 
 import { ICreateChampionshipDTO } from '../../dtos/ICreateChampionshipDTO';
-import { IChampionshipRepository, IChampionshipWithTeams, IRegisterTeams } from '../IChampionshipRepository';
+import {
+  IChampionshipRepository,
+  IChampionshipWithMatchs,
+  IChampionshipWithTeams,
+  IRegisterTeams,
+} from '../IChampionshipRepository';
 
 class ChampionshipRepository implements IChampionshipRepository {
   async create(data: ICreateChampionshipDTO): Promise<Championship> {
@@ -114,6 +119,19 @@ class ChampionshipRepository implements IChampionshipRepository {
     });
 
     return championshipTeams;
+  }
+
+  async findMatchs(championshipName: string): Promise<IChampionshipWithMatchs | null> {
+    const championshipMatchs = await prisma.championship.findUnique({
+      where: {
+        name: championshipName,
+      },
+      include: {
+        matchs: true,
+      },
+    });
+
+    return championshipMatchs;
   }
 
   async deleteTeam(championshipId: string, teamName: string): Promise<Championship> {

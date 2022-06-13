@@ -29,26 +29,25 @@ export class StartChampionshipUseCase {
 
     const championshipStarted = await this.championshipRepository.updateStatus(championship.name, 'start');
 
-    const numberOfTheMatchs = championship.teams.length / 2;
     let matchNumber = 1;
+    let teams: string[] = [];
 
-    (async () => {
-      do {
-        const indexTeamA = Math.floor(Math.random() * championship.teams.length);
-        const indexTeamB = Math.floor(Math.random() * championship.teams.length);
+    championship.teams.forEach((team) => {
+      teams.push(team.name);
+    });
 
-        if (championship.teams[indexTeamA].name !== championship.teams[indexTeamB].name) {
-          await this.matchRepository.create({
-            championshipId: championship.id,
-            matchNumber,
-            teamA: championship.teams[indexTeamA].name,
-            teamB: championship.teams[indexTeamB].name,
-          });
+    while (teams.length > 0) {
+      await this.matchRepository.create({
+        championshipId: championship.id,
+        matchNumber,
+        teamA: teams[0],
+        teamB: teams[teams.length - 1],
+      });
 
-          matchNumber += 1;
-        }
-      } while (matchNumber <= numberOfTheMatchs);
-    })();
+      teams.shift();
+      teams.pop();
+      matchNumber += 1;
+    }
 
     return championshipStarted;
   }

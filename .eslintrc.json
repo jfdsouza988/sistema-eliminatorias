@@ -26,7 +26,8 @@
         "class-methods-use-this": "off",
         "no-useless-constructor": "off",
         "no-nested-ternary": "off",
-        "no-await-in-loop":"off"
+        "no-await-in-loop":"off",
+        "prefer-const":"off"
     },
     "settings": {
         "import/resolver": {

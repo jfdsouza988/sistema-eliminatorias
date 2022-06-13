@@ -30,21 +30,21 @@ export class StartNewPhaseOfChampionshipUseCase {
     }
 
     let matchNumber = championship.matchs.length + 1;
+    let count = 0;
 
-    await Promise.all(
-      championship.matchs.map(async (match) => {
-        const currentIndex = championship.matchs.indexOf(match);
-
+    (async () => {
+      while (count < championship.matchs.length - 1) {
         await this.matchRepository.create({
           championshipId: championship.id,
           matchNumber,
-          teamA: match.winner as string,
-          teamB: championship.matchs[currentIndex + 1]?.winner as string,
+          teamA: championship.matchs[count].winner as string,
+          teamB: championship.matchs[count + 1].winner as string,
         });
 
         matchNumber += 1;
-      }),
-    );
+        count += 1;
+      }
+    })();
 
     const championshipUpdated = await this.championshipRepository.findMatchs(name);
 

@@ -12,7 +12,7 @@ let championshipRepositoryInMemory: ChampionshipRepositoryInMemory;
 let matchRepositoryInMemory: MatchRepositoryInMemory;
 let startChampionshipUseCase: StartChampionshipUseCase;
 
-describe('Register teams in championship', () => {
+describe('Start a Championship', () => {
   beforeEach(() => {
     championshipRepositoryInMemory = new ChampionshipRepositoryInMemory();
     matchRepositoryInMemory = new MatchRepositoryInMemory();

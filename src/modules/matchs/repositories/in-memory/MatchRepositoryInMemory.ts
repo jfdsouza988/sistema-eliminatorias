@@ -32,6 +32,7 @@ class MatchRepositoryInMemory implements IMatchRepository {
     match.resultTeamA = teamA;
     match.resultTeamB = teamB;
     match.winner = winner;
+    match.status = MatchStatus.FINISHED;
 
     return match;
   }

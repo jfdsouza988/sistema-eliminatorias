@@ -1,4 +1,4 @@
-import { Championship, ChampionshipStatus } from '@prisma/client';
+import { Championship, ChampionshipStatus, Team, Match } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { ICreateChampionshipDTO } from 'modules/championships/dtos/ICreateChampionshipDTO';
 import {
@@ -9,8 +9,22 @@ import {
   IRegisterTeams,
 } from '../IChampionshipRepository';
 
+interface IChampionshipProps {
+  id: string;
+  name: string;
+  description: string;
+  award: number;
+  champion: string | null;
+  status: ChampionshipStatus;
+  teams: Team[];
+  matchs: Match[];
+  eliminated: string[];
+  updatedAt: Date;
+  createdAt: Date;
+}
+
 class ChampionshipRepositoryInMemory implements IChampionshipRepository {
-  championships: Championship[] = [];
+  championships: IChampionshipProps[] = [];
 
   async create(data: ICreateChampionshipDTO): Promise<Championship> {
     const championship = {
@@ -19,6 +33,8 @@ class ChampionshipRepositoryInMemory implements IChampionshipRepository {
       name: data.name,
       award: data.award,
       eliminated: [],
+      teams: [],
+      matchs: [],
       champion: null,
       status: ChampionshipStatus.PENDING,
       updatedAt: new Date(),
@@ -58,7 +74,7 @@ class ChampionshipRepositoryInMemory implements IChampionshipRepository {
     return championship;
   }
 
-  async registerTeams({ name, teams }: IRegisterTeams): Promise<Championship | null> {
+  async registerTeams({ name, teams }: IRegisterTeams): Promise<IChampionshipWithTeams | null> {
     const championship = this.championships.find(
       (championship) => championship.name === name,
     ) as IChampionshipWithTeams;
@@ -73,19 +89,7 @@ class ChampionshipRepositoryInMemory implements IChampionshipRepository {
       });
     });
 
-    const championshipReturn = {
-      id: championship.id,
-      name: championship.name,
-      description: championship.description,
-      award: championship.award,
-      champion: championship.champion,
-      status: championship.status,
-      eliminated: championship.eliminated,
-      updatedAt: championship.updatedAt,
-      createdAt: championship.createdAt,
-    };
-
-    return championshipReturn;
+    return championship;
   }
 
   async findTeams(name: string): Promise<IChampionshipWithTeams | null> {
@@ -130,9 +134,9 @@ class ChampionshipRepositoryInMemory implements IChampionshipRepository {
     const championship = this.championships.find((championship) => championship.name === name) as Championship;
 
     if (status === 'start') {
-      championship.status === ChampionshipStatus.INITIATED;
+      championship.status = ChampionshipStatus.INITIATED;
     } else if (status === 'finish') {
-      championship.status === ChampionshipStatus.FINISHED;
+      championship.status = ChampionshipStatus.FINISHED;
     }
 
     return championship;

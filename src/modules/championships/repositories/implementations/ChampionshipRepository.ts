@@ -68,7 +68,7 @@ class ChampionshipRepository implements IChampionshipRepository {
     return championship;
   }
 
-  async registerTeams({ name, teams }: IRegisterTeams): Promise<Championship | null> {
+  async registerTeams({ name, teams }: IRegisterTeams): Promise<IChampionshipWithTeams | null> {
     await Promise.all(
       teams.map(async (team) => {
         await prisma.championship.update({
@@ -97,12 +97,7 @@ class ChampionshipRepository implements IChampionshipRepository {
         name,
       },
       include: {
-        teams: {
-          select: {
-            name: true,
-            abbreviation: true,
-          },
-        },
+        teams: true,
       },
     });
 

@@ -30,7 +30,7 @@ interface IChampionshipRepository {
   findById(id: string): Promise<IChampionshipCompleteInfo | null>;
   findAll(): Promise<Championship[]>;
   update(id: string, name: string, description: string, award: number): Promise<Championship>;
-  registerTeams({ name, teams }: IRegisterTeams): Promise<Championship | null>;
+  registerTeams({ name, teams }: IRegisterTeams): Promise<IChampionshipWithTeams | null>;
   findTeams(name: string): Promise<IChampionshipWithTeams | null>;
   findMatchs(championshipName: string): Promise<IChampionshipWithMatchs | null>;
   deleteTeam(championshipId: string, teamName: string): Promise<Championship>;

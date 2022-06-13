@@ -1,3 +1,4 @@
+import { AppError } from '../../../../shared/errors/AppError';
 import { ChampionshipRepositoryInMemory } from '../../repositories/in-memory/ChampionshipRepositoryInMemory';
 import { CreateChampionshipUseCase } from './CreateChampionshipUseCase';
 
@@ -26,5 +27,27 @@ describe('Create Championship', () => {
     const championshipCreated = await championshipRepositoryInMemory.findByName(championship.name);
 
     expect(championshipCreated).toHaveProperty('id');
+  });
+
+  it('should not be able to create a new championship with name exists', async () => {
+    expect(async () => {
+      const championship = {
+        name: 'Championship Test',
+        description: 'Championship description Teste',
+        award: 1000,
+      };
+
+      await createChampionshipUseCase.execute({
+        name: championship.name,
+        description: championship.description,
+        award: championship.award,
+      });
+
+      await createChampionshipUseCase.execute({
+        name: championship.name,
+        description: championship.description,
+        award: championship.award,
+      });
+    }).rejects.toBeInstanceOf(AppError);
   });
 });

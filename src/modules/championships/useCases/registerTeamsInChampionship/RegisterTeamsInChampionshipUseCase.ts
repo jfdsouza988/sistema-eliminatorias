@@ -20,6 +20,16 @@ export class RegisterTeamsInChampionshipUseCase {
   ) {}
 
   async execute({ championshipName, teams }: IRequest) {
+    const championship = await this.championshipRepository.findByName(championshipName);
+
+    if (!championship) {
+      throw new AppError('Championship does not exists');
+    }
+
+    if (championship.status === 'INITIATED' || championship.status === 'FINISHED') {
+      throw new AppError('Championship already started or finished');
+    }
+
     let invalidAbbreviationTeam = false;
 
     teams.forEach((team) => {

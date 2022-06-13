@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { StartNewPhaseOfChampionshipController } from '../../modules/championships/useCases/startNewPhaseOfChampionship/StartNewPhaseOfChampionshipController';
 import { ListChampionshipTeamsController } from '../../modules/championships/useCases/listChampionshipTeams/ListChampionshipTeamsController';
 import { ListAllChampionshipsController } from '../../modules/championships/useCases/listAllChampionships/ListAllChampionshipsController';
 import { CreateChampionshipController } from '../../modules/championships/useCases/createChampionship/CreateChampionshipController';
@@ -18,6 +19,7 @@ const registerTeamsInChampionshipController = new RegisterTeamsInChampionshipCon
 const listChampionshipTeamsController = new ListChampionshipTeamsController();
 const startChampionshipController = new StartChampionshipController();
 const listChampionshipMatchsController = new ListChampionshipMatchsController();
+const startNewPhaseOfChampionshipController = new StartNewPhaseOfChampionshipController();
 
 championshipRoutes.post('/', createChampionshipController.handle);
 championshipRoutes.get('/search', listChampionshipController.handle);
@@ -27,5 +29,6 @@ championshipRoutes.patch('/update/:id', updateChampionshipController.handle);
 championshipRoutes.post('/register-teams', registerTeamsInChampionshipController.handle);
 championshipRoutes.get('/:name/teams', listChampionshipTeamsController.handle);
 championshipRoutes.post('/start', startChampionshipController.handle);
+championshipRoutes.post('/new-phase', startNewPhaseOfChampionshipController.handle);
 
 export { championshipRoutes };

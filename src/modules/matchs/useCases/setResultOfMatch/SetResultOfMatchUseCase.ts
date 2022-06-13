@@ -1,5 +1,8 @@
 import { inject, injectable } from 'tsyringe';
-import { IChampionshipRepository } from '../../../championships/repositories/IChampionshipRepository';
+import {
+  IChampionshipCompleteInfo,
+  IChampionshipRepository,
+} from '../../../championships/repositories/IChampionshipRepository';
 import { AppError } from '../../../../shared/errors/AppError';
 import { IMatchRepository } from '../../repositories/IMatchRepository';
 
@@ -46,11 +49,29 @@ export class SetResultOfMatchUseCase {
 
     const updateResultOfMatch = await this.matchRepository.updateResult(id, teamA, teamB, winner);
 
-    const championship = await this.championshipRepository.findById(existsMatch.championshipId);
+    const championship = (await this.championshipRepository.findById(
+      existsMatch.championshipId,
+    )) as IChampionshipCompleteInfo;
 
-    if (championship) {
-      championship.eliminated.push(loser);
-      await this.championshipRepository.updateEliminated(existsMatch.championshipId, championship.eliminated);
+    championship.eliminated.push(loser);
+
+    const teamsEliminatedUpdated = await this.championshipRepository.updateEliminated(
+      existsMatch.championshipId,
+      championship.eliminated,
+    );
+
+    if (teamsEliminatedUpdated.eliminated.length === championship.teams.length - 1) {
+      await this.championshipRepository.updateStatus(championship.name, 'finish');
+
+      championship.teams.forEach(async (team) => {
+        if (!teamsEliminatedUpdated.eliminated.includes(team.name)) {
+          await this.championshipRepository.updateChampion(championship.id, team.name);
+        }
+      });
+
+      return {
+        message: 'Championship finished',
+      };
     }
 
     return updateResultOfMatch;

@@ -3,6 +3,7 @@ import { prisma } from '../../../../database/prismaClient';
 
 import { ICreateChampionshipDTO } from '../../dtos/ICreateChampionshipDTO';
 import {
+  IChampionshipCompleteInfo,
   IChampionshipRepository,
   IChampionshipWithMatchs,
   IChampionshipWithTeams,
@@ -32,7 +33,7 @@ class ChampionshipRepository implements IChampionshipRepository {
     return championship;
   }
 
-  async findById(id: string): Promise<Championship | null> {
+  async findById(id: string): Promise<IChampionshipCompleteInfo | null> {
     const championship = await prisma.championship.findUnique({
       where: {
         id,
@@ -180,6 +181,23 @@ class ChampionshipRepository implements IChampionshipRepository {
     });
 
     return updateEliminatedFromChampionship;
+  }
+
+  async updateChampion(id: string, champion: string): Promise<IChampionshipCompleteInfo> {
+    const updateChampionshipWinner = await prisma.championship.update({
+      where: {
+        id,
+      },
+      data: {
+        champion,
+      },
+      include: {
+        teams: true,
+        matchs: true,
+      },
+    });
+
+    return updateChampionshipWinner;
   }
 }
 

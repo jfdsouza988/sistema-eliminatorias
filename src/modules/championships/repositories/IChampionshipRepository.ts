@@ -19,10 +19,15 @@ export interface IChampionshipWithMatchs extends Championship {
   matchs: Match[];
 }
 
+export interface IChampionshipCompleteInfo extends Championship {
+  teams: Team[];
+  matchs: Match[];
+}
+
 interface IChampionshipRepository {
   create(data: ICreateChampionshipDTO): Promise<Championship>;
   findByName(name: string): Promise<Championship | null>;
-  findById(id: string): Promise<Championship | null>;
+  findById(id: string): Promise<IChampionshipCompleteInfo | null>;
   findAll(): Promise<Championship[]>;
   update(id: string, name: string, description: string, award: number): Promise<Championship>;
   registerTeams({ name, teams }: IRegisterTeams): Promise<Championship | null>;
@@ -31,6 +36,7 @@ interface IChampionshipRepository {
   deleteTeam(championshipId: string, teamName: string): Promise<Championship>;
   updateStatus(name: string, status: string): Promise<Championship>;
   updateEliminated(id: string, eliminated: string[]): Promise<Championship>;
+  updateChampion(id: string, winner: string): Promise<IChampionshipCompleteInfo>;
 }
 
 export { IChampionshipRepository };

@@ -1,8 +1,9 @@
-import { inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { IMatchRepository } from '../../../matchs/repositories/IMatchRepository';
 import { AppError } from '../../../../shared/errors/AppError';
 import { IChampionshipRepository } from '../../repositories/IChampionshipRepository';
 
+@injectable()
 export class StartNewPhaseOfChampionshipUseCase {
   constructor(
     @inject('ChampionshipRepository')
@@ -38,7 +39,7 @@ export class StartNewPhaseOfChampionshipUseCase {
           championshipId: championship.id,
           matchNumber,
           teamA: match.winner as string,
-          teamB: championship.matchs[currentIndex + 1].winner as string,
+          teamB: championship.matchs[currentIndex + 1]?.winner as string,
         });
 
         matchNumber += 1;

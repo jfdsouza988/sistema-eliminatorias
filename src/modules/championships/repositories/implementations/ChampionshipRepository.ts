@@ -27,6 +27,20 @@ class ChampionshipRepository implements IChampionshipRepository {
     return championship;
   }
 
+  async findById(id: string): Promise<Championship | null> {
+    const championship = await prisma.championship.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        teams: true,
+        matchs: true,
+      },
+    });
+
+    return championship;
+  }
+
   async findAll(): Promise<Championship[]> {
     const championships = await prisma.championship.findMany();
 
@@ -135,6 +149,19 @@ class ChampionshipRepository implements IChampionshipRepository {
     });
 
     return updatedChampionship;
+  }
+
+  async updateEliminated(id: string, eliminated: string[]): Promise<Championship> {
+    const updateEliminatedFromChampionship = await prisma.championship.update({
+      where: {
+        id,
+      },
+      data: {
+        eliminated,
+      },
+    });
+
+    return updateEliminatedFromChampionship;
   }
 }
 

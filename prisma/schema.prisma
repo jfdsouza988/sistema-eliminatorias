@@ -22,6 +22,7 @@ model Championship {
   status      ChampionshipStatus @default(PENDING)
   teams       Team[]             @relation("championship_teams")
   matchs      Match[]
+  eliminated  String[]
 
   updatedAt DateTime @default(now()) @updatedAt
   createdAt DateTime @default(now())

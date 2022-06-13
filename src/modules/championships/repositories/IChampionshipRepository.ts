@@ -18,12 +18,14 @@ export interface IChampionshipWithTeams extends Championship {
 interface IChampionshipRepository {
   create(data: ICreateChampionshipDTO): Promise<Championship>;
   findByName(name: string): Promise<Championship | null>;
+  findById(id: string): Promise<Championship | null>;
   findAll(): Promise<Championship[]>;
   update(id: string, name: string, description: string, award: number): Promise<Championship>;
   registerTeams({ name, teams }: IRegisterTeams): Promise<Championship | null>;
   findTeams(name: string): Promise<IChampionshipWithTeams | null>;
   deleteTeam(championshipId: string, teamName: string): Promise<Championship>;
   updateStatus(name: string, status: string): Promise<Championship>;
+  updateEliminated(id: string, eliminated: string[]): Promise<Championship>;
 }
 
 export { IChampionshipRepository };

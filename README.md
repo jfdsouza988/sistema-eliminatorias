@@ -26,7 +26,7 @@ O objetivo é podermos cadastrar times neste sistema de chaves (como o de um cam
 
 <br>
 
-<img alt="screenshot" title="screenshot" src=".github/screenshot.png" width="514px" height="308px"/>
+<h2 align="center"><img alt="screenshot" title="screenshot" src=".github/screenshot.png" width="534px" height="306px"/></h2>
 
 ## ⚡ Requisitos
 
